@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Caixa - Visão Geral</title>
+    <style>
+        :root {
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --primary: #2196F3;
+            --primary-hover: #1976D2;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #FF9800;
+            --border: #e0e0e0;
+            --muted: #888888;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1,
+        h2 {
+            margin: 0;
+        }
+
+        /* Ações Rápidas */
+        .acoes-rapidas {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn-acao {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-renda {
+            background-color: var(--success);
+        }
+
+        .btn-despesa {
+            background-color: var(--danger);
+        }
+
+        /* Fontes de Dinheiro / Cartões */
+        .fontes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .fontes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card-fonte {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .card-fonte:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .card-fonte h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .card-fonte .tipo {
+            font-size: 0.8em;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-fonte .valor {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .valor.positivo {
+            color: var(--success);
+        }
+
+        .valor.negativo {
+            color: var(--danger);
+        }
+
+        /* Botão Remover Card */
+        .btn-remover {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        /* Extrato Unificado e Filtros */
+        .extrato-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filtro-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filtro-container select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        .tag-fonte {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .tag-entrada {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-extra {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .tag-carrefour {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tag-tatico {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .tag-diversos {
+            background: #f5f5f5;
+            color: #616161;
+        }
+
+        /* Modais */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: var(--muted);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-add-lancamento {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* Navegação */
+        .nav-menu {
+            margin-bottom: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-menu a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="nav-menu">
+            <a href="dividas-v2.html">← Voltar para Lançamentos Iniciais</a>
+        </div>
+
+        <div class="header-top">
+            <h1>Gestão de Caixa</h1>
+            <button
+                style="background: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 8px 15px; border-radius: 4px; font-weight: bold;">Exportar</button>
+        </div>
+
+        <!-- Ações Rápidas (AQUI OS BOTÕES FORAM CORRIGIDOS) -->
+        <div class="acoes-rapidas">
+            <button class="btn-acao btn-renda" onclick="adicionarRenda()">+ Adicionar Renda</button>
+            <button class="btn-acao btn-despesa" onclick="adicionarDivida()">- Adicionar Despesa / Dívida</button>
+        </div>
+
+        <div class="fontes-header">
+            <h2>Meus Saldos e Limites</h2>
+        </div>
+
+        <div class="fontes-grid">
+            <div class="card-fonte" onclick="abrirModalDetalhe('Conta Principal (Pix)', 'entrada')">
+                <span class="tipo">Dinheiro Vivo / Pix</span>
+                <h3>Conta Principal</h3>
+                <div class="valor positivo">R$ 1.200,00</div>
+            </div>
+
+            <div class="card-fonte" onclick="abrirModalDetalhe('Cartão Extra', 'extra')">
+                <span class="tipo">Cartão de Crédito</span>
+                <h3>Extra Gold</h3>
+                <div class="valor negativo">R$ - 2.046,89</div>
+            </div>
+
+            <div class="card-fonte" onclick="abrirModalDetalhe('Cartão Carrefour', 'carrefour')">
+                <span class="tipo">Cartão de Crédito</span>
+                <h3>Carrefour</h3>
+                <div class="valor negativo">R$ - 271,62</div>
+            </div>
+
+            <div class="card-fonte" onclick="abrirModalDetalhe('Cartão Tatico', 'tatico')">
+                <span class="tipo">Cartão de Crédito</span>
+                <h3>Tatico</h3>
+                <div class="valor negativo">R$ - 168,66</div>
+            </div>
+        </div>
+
+        <div class="extrato-section">
+            <div class="filtro-container">
+                <h2>Extrato Unificado</h2>
+                <div>
+                    <label for="filtro-extrato" style="font-weight: bold; margin-right: 10px;">Filtrar por:</label>
+                    <select id="filtro-extrato" onchange="filtrarTabela()">
+                        <option value="todos">Mostrar Todos</option>
+                        <option value="entrada">Entradas (Dinheiro/Pix)</option>
+                        <option value="extra">Cartão Extra</option>
+                        <option value="carrefour">Cartão Carrefour</option>
+                        <option value="tatico">Cartão Tatico</option>
+                        <option value="diversos">Gastos Diversos (Avulsos)</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Fonte / Categoria</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-extrato">
+                    <tr data-categoria="entrada">
+                        <td>05/09/2026</td>
+                        <td>Recebimento Salário</td>
+                        <td><span class="tag-fonte tag-entrada">Conta Principal</span></td>
+                        <td class="positivo">+ R$ 1.200,00</td>
+                    </tr>
+                    <tr data-categoria="carrefour">
+                        <td>02/09/2026</td>
+                        <td>Abatimento Ticket (VA)</td>
+                        <td><span class="tag-fonte tag-carrefour">Carrefour</span></td>
+                        <td class="positivo">+ R$ 900,00</td>
+                    </tr>
+                    <tr data-categoria="extra">
+                        <td>01/09/2026</td>
+                        <td>Assinatura Wellhub</td>
+                        <td><span class="tag-fonte tag-extra">Extra Gold</span></td>
+                        <td class="negativo">- R$ 149,99</td>
+                    </tr>
+                    <tr data-categoria="carrefour">
+                        <td>28/08/2026</td>
+                        <td>Dentista do Thiago</td>
+                        <td><span class="tag-fonte tag-carrefour">Carrefour</span></td>
+                        <td class="negativo">- R$ 160,00</td>
+                    </tr>
+                    <tr data-categoria="tatico">
+                        <td>25/08/2026</td>
+                        <td>Supermercado Tatico</td>
+                        <td><span class="tag-fonte tag-tatico">Tatico</span></td>
+                        <td class="negativo">- R$ 75,00</td>
+                    </tr>
+                    <tr data-categoria="diversos">
+                        <td>20/08/2026</td>
+                        <td>Oficina Mecânica (Junta Motor)</td>
+                        <td><span class="tag-fonte tag-diversos">Diversos</span></td>
+                        <td class="negativo">- R$ 350,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Detalhe do Cartão/Fonte -->
+    <div class="modal-overlay" id="modal-detalhe">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Lançamentos</h2>
+                <button class="close-btn" onclick="fecharModal()">Fechar</button>
+            </div>
+            <p style="color: var(--muted); margin-top: 0;">Visualize e gerencie as movimentações específicas desta
+                fonte.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-tabela-corpo">
+                    <!-- Preenchido via JS -->
+                </tbody>
+            </table>
+
+            <button class="btn-add-lancamento" id="btn-add-especifico"
+                onclick="alert('Abrir painel para lançar despesa direto neste cartão!')">+ Adicionar Novo Lançamento
+                Aqui</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importando o Firebase direto via CDN (Ideal para GitHub Pages)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // As suas chaves de acesso capturadas
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8Fi3BCqkWP2ha1yG_582IycQnyLoVISU",
+            authDomain: "gestaocaixa-saas.firebaseapp.com",
+            projectId: "gestaocaixa-saas",
+            storageBucket: "gestaocaixa-saas.firebasestorage.app",
+            messagingSenderId: "232750659570",
+            appId: "1:232750659570:web:abf3187935c97103a71d6b"
+        };
+
+        // Inicializando os serviços da Nuvem
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ==========================================
+        // FUNÇÕES GLOBAIS DE INSERÇÃO NA NUVEM
+        // ==========================================
+        window.adicionarRenda = async function () {
+            const nomeRenda = prompt("Digite a origem da Renda (ex: Freelance, Venda):");
+            if (!nomeRenda) return;
+            const valor = prompt("Qual o valor recebido? (ex: 800.00)");
+            if (!valor) return;
+
+            const valorFormatado = parseFloat(valor.replace(',', '.')).toFixed(2).replace('.', ',');
+            const chaveFonte = nomeRenda.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Grava direto no Firestore
+            await addDoc(collection(db, "cartoes"), {
+                nome: nomeRenda,
+                chave: chaveFonte,
+                tipo: 'Entrada / Receita',
+                valorTexto: `R$ + ${valorFormatado}`,
+                classeCSS: 'positivo'
+            });
+        };
+
+        window.adicionarDivida = async function () {
+            const nomeDivida = prompt("Digite o nome da Despesa/Dívida (ex: Conserto do Carro):");
+            if (!nomeDivida) return;
+            const saldo = prompt("Qual o valor total dessa dívida? (ex: 3500.00)");
+            if (!saldo) return;
+
+            const saldoFormatado = parseFloat(saldo.replace(',', '.')).toFixed(2).replace('.', ',');
+            const chaveFonte = nomeDivida.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            await addDoc(collection(db, "cartoes"), {
+                nome: nomeDivida,
+                chave: chaveFonte,
+                tipo: 'Dívida / Passivo',
+                valorTexto: `R$ - ${saldoFormatado}`,
+                classeCSS: 'negativo'
+            });
+        };
+
+        // ==========================================
+        // LEITURA EM TEMPO REAL DOS CARDS (MAGIA ACONTECENDO)
+        // ==========================================
+        onSnapshot(collection(db, "cartoes"), (snapshot) => {
+            const grid = document.querySelector('.fontes-grid');
+            // Limpa apenas os cards dinâmicos para não duplicar quando a nuvem atualizar
+            document.querySelectorAll('.card-dinamico').forEach(e => e.remove());
+
+            snapshot.forEach((documento) => {
+                const cartao = documento.data();
+                const novoCard = document.createElement('div');
+                novoCard.className = 'card-fonte card-dinamico';
+                novoCard.setAttribute('onclick', `abrirModalDetalhe('${cartao.nome}', '${cartao.chave}')`);
+
+                novoCard.innerHTML = `
+                    <button class="btn-remover" onclick="event.stopPropagation(); removerCartao('${documento.id}')" title="Remover">×</button>
+                    <span class="tipo">${cartao.tipo}</span>
+                    <h3>${cartao.nome}</h3>
+                    <div class="valor ${cartao.classeCSS}">${cartao.valorTexto}</div>
+                `;
+                grid.appendChild(novoCard);
+            });
+        });
+
+        window.removerCartao = async function (idDocumento) {
+            if (confirm("Tem certeza que deseja apagar permanentemente essa conta?")) {
+                await deleteDoc(doc(db, "cartoes", idDocumento));
+            }
+        };
+
+        // ==========================================
+        // LÓGICA DOS MODAIS LIGADA À NUVEM
+        // ==========================================
+        const modal = document.getElementById('modal-detalhe');
+        const tituloModal = document.getElementById('modal-titulo');
+        const corpoTabelaModal = document.getElementById('modal-tabela-corpo');
+        const btnAddEspecifico = document.getElementById('btn-add-especifico');
+        let escutaLancamentos = null; // Guarda a conexão em tempo real do modal aberto
+
+        window.abrirModalDetalhe = function (nomeFonte, chaveFonte) {
+            tituloModal.innerText = 'Movimentações - ' + nomeFonte;
+            corpoTabelaModal.innerHTML = '';
+
+            btnAddEspecifico.innerText = `+ Adicionar Lançamento em ${nomeFonte}`;
+            btnAddEspecifico.setAttribute('onclick', `inserirLinhaModal('${chaveFonte}')`);
+
+            modal.style.display = 'flex';
+
+            // Cancela a escuta anterior para não misturar dados de cartões diferentes
+            if (escutaLancamentos) escutaLancamentos();
+
+            // Puxa os lançamentos específicos no Firestore em tempo real
+            escutaLancamentos = onSnapshot(collection(db, `lancamentos_${chaveFonte}`), (snapshot) => {
+                corpoTabelaModal.innerHTML = '';
+                if (snapshot.empty) {
+                    corpoTabelaModal.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum lançamento encontrado.</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach((documento) => {
+                    const item = documento.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.data}</td>
+                        <td>${item.desc}</td>
+                        <td class="${item.classe}">${item.valor}</td>
+                    `;
+                    corpoTabelaModal.appendChild(tr);
+                });
+            });
+        };
+
+        window.inserirLinhaModal = async function (chaveFonte) {
+            const desc = prompt("Descrição do lançamento:");
+            if (!desc) return;
+            const valor = prompt("Valor (ex: 150.00):");
+            if (!valor) return;
+
+            const dataHoje = new Date().toLocaleDateString('pt-BR');
+            const valorFormatado = parseFloat(valor.replace(',', '.')).toFixed(2).replace('.', ',');
+            const ehEntrada = chaveFonte === 'entrada' || chaveFonte.includes('renda');
+            const prefixo = ehEntrada ? '+ R$' : '- R$';
+            const classe = ehEntrada ? 'positivo' : 'negativo';
+
+            await addDoc(collection(db, `lancamentos_${chaveFonte}`), {
+                data: dataHoje,
+                desc: desc,
+                valor: `${prefixo} ${valorFormatado}`,
+                classe: classe,
+                timestamp: new Date()
+            });
+        };
+
+        window.fecharModal = function () {
+            modal.style.display = 'none';
+            if (escutaLancamentos) escutaLancamentos(); // Desliga o ouvinte ao fechar
+        }
+
+        window.onclick = function (event) { if (event.target == modal) window.fecharModal(); }
+
+        window.filtrarTabela = function () {
+            const filtro = document.getElementById('filtro-extrato').value;
+            const linhas = document.querySelectorAll('#tabela-extrato tr');
+            linhas.forEach(linha => {
+                const categoria = linha.getAttribute('data-categoria');
+                linha.style.display = (filtro === 'todos' || categoria === filtro) ? '' : 'none';
+            });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro - Setembro</title>
+    <style>
+        :root {
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --primary: #4CAF50;
+            --primary-hover: #45a049;
+            --danger: #f44336;
+            --border: #e0e0e0;
+            --muted: #888888;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        /* Dashboard e Cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .card .value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .despesa {
+            color: var(--danger);
+        }
+
+        .oculto {
+            color: var(--muted);
+            font-size: 1.2em !important;
+            font-weight: normal !important;
+            margin-top: 10px;
+        }
+
+        /* Formulário */
+        .form-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Seção Oculta do Formulário */
+        #opcoes-parcelamento {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px dashed #ccc;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Modais (Telas dos Cartões) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        /* Tabela de Lançamentos */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f4f4f9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Operação Setembro</h1>
+
+        <div class="dashboard">
+            <div class="card" onclick="window.location.href='gestao_caixa.html'">
+                <h3>Gestão de Caixa</h3>
+                <div class="value oculto">🔒 Acessar Entradas</div>
+            </div>
+            <div class="card" onclick="abrirModal('Extra')">
+                <h3>Cartão Extra</h3>
+                <div class="value despesa">R$ 2.046,89</div>
+            </div>
+            <div class="card" onclick="abrirModal('Carrefour')">
+                <h3>Cartão Carrefour</h3>
+                <div class="value despesa">R$ 271,62</div>
+            </div>
+            <div class="card" onclick="abrirModal('Tatico')">
+                <h3>Cartão Tatico</h3>
+                <div class="value despesa">R$ 168,66</div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Lançamento de Gasto</h2>
+            <form id="form-despesa">
+                <input type="text" id="descricao" placeholder="Descrição do Gasto (ex: Gasolina, Mercado)" required>
+                <input type="number" id="valor" placeholder="Valor Total (R$)" step="0.01" required>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-parcelado">
+                    <label for="check-parcelado">Compra Parcelada?</label>
+                </div>
+
+                <!-- Área dinâmica que aparece ao marcar o Checkbox -->
+                <div id="opcoes-parcelamento">
+                    <input type="number" id="qtd-parcelas" placeholder="Quantidade de Parcelas (ex: 10)" min="2">
+                    <select id="cartao">
+                        <option value="" disabled selected>Selecione o Cartão...</option>
+                        <option value="Extra">Cartão Extra (Carteira Diária)</option>
+                        <option value="Carrefour">Cartão Carrefour</option>
+                        <option value="Tatico">Cartão Tatico</option>
+                    </select>
+                </div>
+
+                <button type="submit">Registrar Lançamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Estrutura do Modal (Detalhes do Cartão) -->
+    <div class="modal-overlay" id="modal-fatura">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Fatura</h2>
+                <button class="close-btn" onclick="fecharModal()">Fechar</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor da Parcela</th>
+                        <th>Parcela Atual</th>
+                        <th>Quitação</th>
+                    </tr>
+                </thead>
+                <tbody id="modal-tabela-corpo">
+                    <!-- Linhas preenchidas pelo JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para mostrar/esconder o select de cartão e parcelas
+        const checkParcelado = document.getElementById('check-parcelado');
+        const opcoesParcelamento = document.getElementById('opcoes-parcelamento');
+
+        checkParcelado.addEventListener('change', function () {
+            if (this.checked) {
+                opcoesParcelamento.style.display = 'block';
+                document.getElementById('cartao').setAttribute('required', 'true');
+                document.getElementById('qtd-parcelas').setAttribute('required', 'true');
+            } else {
+                opcoesParcelamento.style.display = 'none';
+                document.getElementById('cartao').removeAttribute('required');
+                document.getElementById('qtd-parcelas').removeAttribute('required');
+            }
+        });
+
+        // Lógica dos Modais de Fatura
+        const modal = document.getElementById('modal-fatura');
+        const tituloModal = document.getElementById('modal-titulo');
+        const corpoTabela = document.getElementById('modal-tabela-corpo');
+
+        // Dados simulados baseados no nosso mapeamento
+        const dadosCartoes = {
+            'Carrefour': [
+                { desc: 'Dentista do Thiago', valor: 'R$ 160,00', parcela: '2/6', quitacao: 'Jan/2027' },
+                { desc: 'Empréstimo 1', valor: 'R$ 298,88', parcela: '4/4', quitacao: 'Set/2026' }
+            ],
+            'Tatico': [
+                { desc: 'Óculos', valor: 'R$ 75,00', parcela: '4/6', quitacao: 'Nov/2026' },
+                { desc: 'Felipe', valor: 'R$ 25,86', parcela: '4/4', quitacao: 'Set/2026' }
+            ],
+            'Extra': [
+                { desc: 'Wellhub', valor: 'R$ 149,99', parcela: 'Fixo', quitacao: 'Recorrente' },
+                { desc: 'Zp*Tecno Pri-ct', valor: 'R$ 358,81', parcela: '10/12', quitacao: 'Nov/2026' }
+            ]
+        };
+
+        function abrirModal(cartaoNome) {
+            tituloModal.innerText = 'Lançamentos - Cartão ' + cartaoNome;
+            corpoTabela.innerHTML = ''; // Limpa a tabela
+
+            // Preenche a tabela com os dados correspondentes
+            if (dadosCartoes[cartaoNome]) {
+                dadosCartoes[cartaoNome].forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td>${item.desc}</td>
+                    <td>${item.valor}</td>
+                    <td>${item.parcela}</td>
+                    <td>${item.quitacao}</td>
+                `;
+                    corpoTabela.appendChild(tr);
+                });
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function fecharModal() {
+            modal.style.display = 'none';
+        }
+
+        // Fecha o modal se clicar fora da caixa branca
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                fecharModal();
+            }
+        }
+
+        // Impede o envio real do formulário por enquanto
+        document.getElementById('form-despesa').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Gasto registrado com sucesso! (Integração com banco de dados em breve)');
+            this.reset();
+            opcoesParcelamento.style.display = 'none';
+        });
+    </script>
+
+</body>
+
+</html>
