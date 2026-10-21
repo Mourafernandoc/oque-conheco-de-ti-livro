@@ -72,19 +72,19 @@
         <!-- Moldura Externa do Livro (Capa Dura Simulada) -->
         <div class="w-full max-w-4xl h-[78vh] sm:h-[75vh] md:aspect-[16/10] bg-slate-950 rounded-xl shadow-2xl p-2 sm:p-3 md:p-6 relative flex flex-col border border-amber-900/40">
             
-            <!-- Páginas Internas (Responsivo: 1 página no celular, 2 páginas no desktop) -->
+            <!-- Páginas Internas -->
             <div id="book-viewport" class="flex-1 w-full h-full flex rounded bg-[#fcf9f2] overflow-hidden relative shadow-inner">
                 
-                <!-- Página Esquerda (Visível sempre) -->
-                <div id="left-page" class="w-full md:w-1/2 h-full p-4 sm:p-6 md:p-10 flex flex-col justify-between book-page relative border-r border-amber-900/10 overflow-y-auto">
+                <!-- Página Esquerda -->
+                <div id="left-page" class="w-1/2 md:w-1/2 h-full p-4 sm:p-6 md:p-10 flex flex-col justify-between book-page relative border-r border-amber-900/10 overflow-y-auto">
                     <!-- Conteúdo Injetado via JS -->
                 </div>
 
                 <!-- Lombada Central (Apenas Desktop) -->
                 <div class="hidden md:block w-8 h-full book-spine-shadow absolute left-1/2 -translate-x-1/2 pointer-events-none z-10"></div>
 
-                <!-- Página Direita (Oculta em mobile se for página única, visível em desktop) -->
-                <div id="right-page" class="hidden md:flex w-1/2 h-full p-4 sm:p-6 md:p-10 flex-col justify-between book-page relative overflow-y-auto page-turn">
+                <!-- Página Direita -->
+                <div id="right-page" class="w-1/2 md:flex md:w-1/2 h-full p-4 sm:p-6 md:p-10 flex-col justify-between book-page relative overflow-y-auto page-turn">
                     <!-- Conteúdo Injetado via JS -->
                 </div>
 
@@ -116,7 +116,7 @@
         Criado com carinho e cumplicidade — Um porto seguro para a Nady. 🧡
     </footer>
 
-    <!-- Script de Gestão do Livro e Otimização Mobile -->
+    <!-- Script de Gestão do Livro -->
     <script>
         const chapterList = [
             { act: "Ato I: A Fortaleza e as Armaduras", num: 1, title: "O Império do Próprio Jeito", text: "Você gosta de resolver o mundo inteirinho com as próprias mãos, do seu jeito, sem dever favor a ninguém. É a sua armadura contra o caos. Mas a verdade que você esconde de todo mundo é que, por dentro, o que você mais quer é poder soltar as rédeas de vez em quando. O seu descanso favorito não é o silêncio, é quando alguém simplesmente pega o problema das suas costas, resolve tudo e te traz mastigado apenas os resultados, te permitindo finalmente respirar em paz." },
@@ -148,7 +148,7 @@
             { act: "Ato IV: A Calma Depois da Borrasca", num: 24, title: "O 'Então Bora' Precisa de Mão Firme", text: "Você adora soltar um 'então bora' quando o assunto é viver uma aventura ou encarar o desconhecido. Só que, por dentro, se não houver uma mão firme segurando a sua para dar o primeiro passo, o medo tenta puxar-te de volta. Você quer ir para o mundo, mas precisa da certeza de que não está a caminhar sozinha." },
             { act: "Ato IV: A Calma Depois da Borrasca", num: 25, title: "O Rolê e a Estrada", text: "O seu espírito divide-se de forma deliciosa: a tua alma ama um rolê aleatório de última hora, sem destino certo, mas a sua mente organizada adora sentar para planear cada detalhe milimétrico de uma viagem dos sonhos. É o equilíbrio perfeito entre a liberdade e o destino." },
             { act: "Ato IV: A Calma Depois da Borrasca", num: 26, title: "O Meio-Termo dos Sonhos", text: "A gente já não tem a ingenuidade dos vinte anos para enlouquecer por qualquer bobagem passageira, mas também não envelheceu a ponto de deixar os nossos maiores sonhos morrerem na gaveta. Estamos bem ali, no ponto exato onde a maturidade encontra a vontade viva de conquistar o mundo." },
-            { act: "Ato IV: A Calma Depois da Borrasca", num: 27, title: "Girassóis e Corações", text: "You acha rosas bonitas, sim, porque fazem parte do manual tradicional do romance. Mas o seu sorriso derrete de verdade, os seus olhos brilham e o rosto ilumina-se inteiro quando você cruza com um girassol. É a flor que traz a luz, a energia e o calor do sol que combinam com a sua essência." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 27, title: "Girassóis e Corações", text: "Você acha rosas bonitas, sim, porque fazem parte do manual tradicional do romance. Mas o seu sorriso derrete de verdade, os seus olhos brilham e o rosto ilumina-se inteiro quando você cruza com um girassol. É a flor que traz a luz, a energia e o calor do sol que combinam com a sua essência." },
             { act: "Ato IV: A Calma Depois da Borrasca", num: 28, title: "O Grito Abafado do Reconhecimento", text: "Você não vive à espera de tapinhas nas costas ou de validação alheia, fingindo que o julgamento dos outros é irrelevante. Mas, quando alguém olha nos teus olhos e reconhece genuinamente o seu esforço, por dentro você quer explodir de alegria por ver que a sua luta finalmente foi enxergada." },
             { act: "Ato IV: A Calma Depois da Borrasca", num: 29, title: "Os Recados dos Sonhos", text: "A sua mente não descansa nem quando você dorme. Os seus sonhos e pesadelos tornaram-se avisos, intuições profundas que a vida te manda para clarear os pensamentos. E mesmo nas noites em que a borrasca aperta por dentro, você sabe exatamente para onde correr para encontrar acolhimento e paz." },
             { act: "Ato IV: A Calma Depois da Borrasca", num: 30, title: "Onde o Amor Não Pesa", text: "Entre todas as tempestades que você enfrentou, as armaduras que vestiu e os caminhos tortuosos que a vida te obrigou a trilhar, o desfecho é simples. O lugar onde você finalmente descansa a cabeça e solta o peso do mundo é aquele onde o amor não cobra, não sufoca e não machuca: é leve, é seguro, é inteiro. É casa." }
@@ -156,7 +156,7 @@
 
         const spreads = [];
 
-        // 1. Capa (Com as 5 fotos em tamanhos responsivos para celular e PC)
+        // 1. Capa
         spreads.push({
             left: `<div class="flex items-center justify-center h-full text-slate-400 text-xs italic">Capa Interna</div>`,
             right: `
@@ -166,31 +166,31 @@
                     </div>
                     <div class="w-full h-full relative flex items-center justify-center mt-6">
 
-                        <!-- Foto 1 (Canto Superior Esquerdo) -->
+                        <!-- Foto 1 -->
                         <div class="absolute top-1 left-1 sm:left-2 w-20 sm:w-24 md:w-32 bg-white p-1.5 pb-3 sm:pb-4 shadow-lg transform -rotate-12 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
                             <img src="foto1.jpg" class="w-full h-16 sm:h-20 md:h-24 object-cover" alt="Foto 1">
                             <p class="text-[7px] sm:text-[8px] text-center font-serif text-slate-600 mt-1 italic">Essência</p>
                         </div>
 
-                        <!-- Foto 2 (Canto Superior Direito) -->
+                        <!-- Foto 2 -->
                         <div class="absolute top-2 right-1 sm:right-2 w-20 sm:w-24 md:w-32 bg-white p-1.5 pb-3 sm:pb-4 shadow-lg transform rotate-12 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
                             <img src="foto2.jpg" class="w-full h-16 sm:h-20 md:h-24 object-cover" alt="Foto 2">
                             <p class="text-[7px] sm:text-[8px] text-center font-serif text-slate-600 mt-1 italic">Sorriso</p>
                         </div>
 
-                        <!-- Foto 3 (Centro) -->
+                        <!-- Foto 3 -->
                         <div class="absolute top-12 sm:top-14 md:top-16 w-24 sm:w-28 md:w-36 bg-white p-1.5 sm:p-2 pb-4 sm:pb-5 shadow-2xl transform -rotate-2 transition hover:scale-105 z-30 rounded-sm border border-slate-200">
                             <img src="foto3.jpg" class="w-full h-20 sm:h-24 md:h-28 object-cover" alt="Foto 3">
                             <p class="text-[8px] sm:text-[9px] text-center font-serif text-amber-900 font-semibold mt-1">Meu Porto Seguro 🧡</p>
                         </div>
 
-                        <!-- Foto 4 (Canto Inferior Esquerdo) -->
+                        <!-- Foto 4 -->
                         <div class="absolute bottom-3 sm:bottom-4 left-2 sm:left-4 w-20 sm:w-24 md:w-32 bg-white p-1.5 pb-3 sm:pb-4 shadow-lg transform rotate-6 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
                             <img src="foto4.jpg" class="w-full h-16 sm:h-20 md:h-24 object-cover" alt="Foto 4">
                             <p class="text-[7px] sm:text-[8px] text-center font-serif text-slate-600 mt-1 italic">Leveza</p>
                         </div>
 
-                        <!-- Foto 5 (Canto Inferior Direito) -->
+                        <!-- Foto 5 -->
                         <div class="absolute bottom-3 sm:bottom-4 right-2 sm:right-4 w-20 sm:w-24 md:w-32 bg-white p-1.5 pb-3 sm:pb-4 shadow-lg transform -rotate-6 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
                             <img src="foto5.jpg" class="w-full h-16 sm:h-20 md:h-24 object-cover" alt="Foto 5">
                             <p class="text-[7px] sm:text-[8px] text-center font-serif text-slate-600 mt-1 italic">Luz</p>
@@ -316,7 +316,7 @@
             title: "Sumário (Parte II)"
         });
 
-        // Adicionar Capítulos dinamicamente em pares (Esquerda e Direita)
+        // Adicionar Capítulos dinamicamente em pares
         const chapterSpreadsStart = spreads.length;
         for (let i = 0; i < chapterList.length; i += 2) {
             let leftChap = chapterList[i];
@@ -356,7 +356,7 @@
             });
         }
 
-        // Contracapa final (Com a foto de vocês: fotonossa.jpg)
+        // Contracapa final
         spreads.push({
             left: `
                 <div class="flex flex-col justify-center h-full text-center px-4 sm:px-6">
@@ -380,16 +380,6 @@
         });
 
         let currentSpread = 0;
-        let isMobile = window.innerWidth < 768;
-
-        // Atualiza o comportamento de exibição caso mude o tamanho da tela
-        window.addEventListener('resize', () => {
-            const nowMobile = window.innerWidth < 768;
-            if (nowMobile !== isMobile) {
-                isMobile = nowMobile;
-                renderSpread('jump');
-            }
-        });
 
         function renderSpread(direction = 'next') {
             const leftPage = document.getElementById('left-page');
@@ -400,21 +390,11 @@
 
             const current = spreads[currentSpread];
 
-            // Em telas menores (celular), mostramos de forma fluida unificando os textos ou alternando por página
             rightPage.classList.add('turning');
 
             setTimeout(() => {
                 leftPage.innerHTML = current.left;
-                
-                // No celular, escondemos o elemento direito se quisermos paginação unitária, ou mantemos adaptado
-                if (window.innerWidth < 768) {
-                    rightPage.style.display = 'none';
-                    leftPage.style.width = '100%';
-                } else {
-                    rightPage.style.display = 'flex';
-                    leftPage.style.width = '50%';
-                    rightPage.innerHTML = current.right;
-                }
+                rightPage.innerHTML = current.right;
 
                 indicator.innerText = `${current.title} (${currentSpread + 1}/${spreads.length})`;
                 prevBtn.disabled = currentSpread === 0;
