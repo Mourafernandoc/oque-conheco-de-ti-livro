@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Livro de Mitos e Verdades da Nady</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para Tipografia Literária Clássica -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', serif;
+            background-color: #0f172a;
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Efeito de textura de livro antigo */
+        .book-page {
+            background-color: #fcf9f2;
+            background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+        }
+        /* Sombra central estilo lombada de livro */
+        .book-spine-shadow {
+            background: linear-gradient(to right, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.03) 100%);
+        }
+        /* Efeito 3D para virada de página */
+        .book-perspective {
+            perspective: 2500px;
+        }
+        .page-turn {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), box-shadow 0.8s ease;
+            transform-origin: left center;
+        }
+        .page-turn.turning {
+            transform: rotateY(-180deg);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.3);
+        }
+        /* Custom scrollbar para o livro */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5dec9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b5a48b;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between items-center text-slate-800 overflow-x-hidden selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- Header / Barra de Navegação Superior -->
+    <header class="w-full py-4 px-6 bg-slate-900 text-slate-100 flex justify-between items-center shadow-lg border-b border-amber-900/30 z-20">
+        <div class="flex items-center space-x-3">
+            <span class="text-amber-400 text-xl font-serif">📖</span>
+            <h1 class="title-font text-lg md:text-xl font-semibold tracking-wide text-amber-100">O Livro de Mitos e Verdades da Nady</h1>
+        </div>
+        <div class="flex items-center space-x-2 text-sm">
+            <span id="page-indicator" class="bg-amber-900/40 text-amber-200 px-3 py-1 rounded-full border border-amber-700/50">Capa</span>
+        </div>
+    </header>
+
+    <!-- Container Principal do Livro -->
+    <main class="flex-1 w-full max-w-6xl mx-auto p-4 md:p-8 flex flex-col justify-center items-center book-perspective">
+        
+        <!-- Moldura Externa do Livro (Capa Dura Simulada) -->
+        <div class="w-full max-w-4xl aspect-[4/3] md:aspect-[16/10] bg-slate-950 rounded-xl shadow-2xl p-3 md:p-6 relative flex flex-col border border-amber-900/40">
+            
+            <!-- Páginas Internas (Modo Dupla Página em Desktop, Única em Mobile) -->
+            <div id="book-viewport" class="flex-1 w-full h-full flex rounded bg-[#fcf9f2] overflow-hidden relative shadow-inner">
+                
+                <!-- Página Esquerda -->
+                <div id="left-page" class="w-full md:w-1/2 h-full p-6 md:p-10 flex flex-col justify-between book-page relative border-r border-amber-900/10 overflow-y-auto">
+                    <!-- Conteúdo Injetado via JS -->
+                </div>
+
+                <!-- Lombada Central (Apenas Desktop) -->
+                <div class="hidden md:block w-8 h-full book-spine-shadow absolute left-1/2 -translate-x-1/2 pointer-events-none z-10"></div>
+
+                <!-- Página Direita com Efeito de Virada (Apenas Desktop) -->
+                <div id="right-page" class="hidden md:flex w-1/2 h-full p-6 md:p-10 flex-col justify-between book-page relative overflow-y-auto page-turn">
+                    <!-- Conteúdo Injetado via JS -->
+                </div>
+
+            </div>
+
+            <!-- Controles de Navegação Inferiores -->
+            <nav class="flex justify-between items-center mt-4 px-2 text-slate-300">
+                <button id="prev-btn" onclick="prevSpread()" class="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-amber-200 px-4 py-2 rounded-lg font-medium shadow transition disabled:opacity-30 disabled:pointer-events-none border border-amber-900/40">
+                    <span>←</span>
+                    <span class="hidden sm:inline">Anterior</span>
+                </button>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="goToPage(0)" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-200/80 px-2.5 py-1.5 rounded border border-amber-900/30 transition">Início</button>
+                    <button onclick="goToPage(2)" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-200/80 px-2.5 py-1.5 rounded border border-amber-900/30 transition">Sumário</button>
+                </div>
+
+                <button id="next-btn" onclick="nextSpread()" class="flex items-center space-x-2 bg-amber-700 hover:bg-amber-600 active:scale-95 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow transition disabled:opacity-30 disabled:pointer-events-none border border-amber-500">
+                    <span class="hidden sm:inline">Próxima</span>
+                    <span>→</span>
+                </button>
+            </nav>
+
+        </div>
+    </main>
+
+    <!-- Rodapé Discreto -->
+    <footer class="py-3 text-center text-xs text-slate-500 font-serif">
+        Criado com carinho e cumplicidade — Um porto seguro para a Nady. 🧡
+    </footer>
+
+    <!-- Script de Gestão do Livro e Efeito de Virada 3D -->
+    <script>
+        const chapterList = [
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 1, title: "O Império do Próprio Jeito", text: "Você gosta de resolver o mundo inteirinho com as próprias mãos, do seu jeito, sem dever favor a ninguém. É a sua armadura contra o caos. Mas a verdade que você esconde de todo mundo é que, por dentro, o que você mais quer é poder soltar as rédeas de vez em quando. O seu descanso favorito não é o silêncio, é quando alguém simplesmente pega o problema das suas costas, resolve tudo e te traz mastigado apenas os resultados, te permitindo finalmente respirar em paz." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 2, title: "A Casca de Panda", text: "Para o mundo lá fora, você veste uma casca grossa e intransponível. É a sua forma de garantir que ninguém vai conseguir te machucar de novo. Mas quem tem o privilégio de olhar além da marra e te ver de verdade sabe o segredo: por baixo dessa fachada de mulher inabalável, você é dócil, gentil, de um coração gigante e carente de um cuidado genuíno, exatamente como um panda que só quer um lugar seguro para descansar." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 3, title: "Os Olhos de Mel e Ouro", text: "Eu aprendi a ler o tempo pelos seus olhos. No sol da manhã, o castanho abre e vira cor de mel, carregando aquele brilho matinal e cheio de esperanças guardadas para um dia que recomeça. Já no sol do entardecer, eles ganham um tom dourado profundo — o reflexo exato da sensação de dever cumprido, de mais uma batalha vencida no fim de uma jornada exaustiva." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 4, title: "O Refúgio Oculto do Toque", text: "Você diz para quem quiser ouvir que detesta toque físico, que prefere espaço e distância de abraços desnecessários. Mas é só uma massagem inesperada começar a desmanchar os nós da tensão nos seus ombros e no seu corpo que toda essa teoria desaba. Ali, no toque certo e sem aviso, você se desmancha e lembra o quanto o corpo humano também precisa de calma." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 5, title: "Cuidar para Não Ser Cuidada", text: "A vida te acostumou a ser o pilar de tudo e de todos, fazendo com que você prefira mil vezes cuidar dos outros a aceitar qualquer tipo de cuidado. É quase um mecanismo de defesa: como faltou costume ao longo da estrada, ser o centro da atenção e receber carinho ainda te deixa desajeitada, como se você estivesse aprendendo a caminhar de novo." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 6, title: "Do Drink Elegante ao Boteco Insalubre", text: "O seu paladar transita entre mundos. Você pode até apreciar um drink refinado e sofisticado quando a ocasião pede, mas o que faz os seus olhos brilharem de paixão verdadeira é a simplicidade sem frescura: uma cerveja estupidamente gelada, um bom torresmo e a atmosfera despretensiosa de um bar de raiz, onde a única regra é ser feliz." },
+            { act: "Ato I: A Fortaleza e as Armaduras", num: 7, title: "A Dança Solitária do Piseiro", text: "Você pode passar horas no seu canto, em silêncio, ouvindo música e viajando na própria vibe com os fones de ouvido. Mas é só os primeiros acordes de um bom piseiro começarem a tocar para a calmaria sumir e dar lugar à energia pura: o corpo balança, os pés entram no ritmo e você sai dançando inteira pela sala, inteiramente dona de si, mesmo sem precisar de par." },
+            
+            { act: "Ato II: Os Detalhes e os Segredos", num: 8, title: "A Arte de Não Pedir", text: "Você nunca pede ajuda a ninguém para não dar o gostinho de parecer frágil ou dependente. Prefere carregar o mundo nas costas em silêncio. Mas, por dentro, o seu sorriso se abre inteiro e o coração se acalma de uma forma indescritível quando alguém percebe o seu cansaço e simplesmente se antecipa, oferecendo ajuda de bom grado, sem que você precise implorar." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 9, title: "O Mapa Silencioso do Desejo", text: "Beijos longos, mordidas nos lábios e carinhos intensos têm o seu valor, mas existe um código secreto entre nós. É quando a minha mão se encaixa de leve na sua, deslizando bem no espaço entre o teu indicador e o teu polegar. Nesse toque simples, todo o barulho do mundo silencia e você entende perfeitamente o recado de quanto eu te desejo por inteiro." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 10, title: "O Peso dos Irrelevantes", text: "Para o mundo, você sustenta a pose de quem não dá a mínima para o que os outros pensam ou dizem. Mas a verdade é que, por trás dessa armadura de indiferença, a sua alma sensível ainda guarda o peso de se importar — mesmo sabendo que aquelas opiniões e pessoas são completamente irrelevantes para a sua felicidade." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 11, title: "A Sóbria Realidade do Prazer", text: "Quando você está levemente altinha de vodka nas festas, adora atiçar, provocar e brincar com o perigo. É a sua faceta brincalhona e solta. Mas a verdade que só quem te conhece de perto desvenda é que o ápice do prazer, a entrega mais profunda e verdadeira só acontece quando você está inteiramente sobria, consciente e dona de cada segundo." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 12, title: "A Trilha Sonora da Própria História", text: "Você pode até gostar de descobrir músicas novas e sons diferentes, mas a sua verdadeira paixão são aquelas canções que parecem ter sido escritas exatamente sobre a sua vida. Quando escuta, você não apenas ouve: você fecha os olhos, viaja na letra e se imagina vivendo cada cena daquela história." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 13, title: "O Banquete da Alma", text: "O seu paladar transita com facilidade entre a elegância de pratos refinados e a simplicidade mais aconchegante do mundo. Mas é só cruzar com uma comidinha da roça, daquelas bem caseiras, pesadas e cheias de afeto, que os teus olhos brilham com a mesma intensidade de quem encontrou um tesouro." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 14, title: "A Intensidade do Pescoço e dos Pés", text: "Nos momentos de intimidade e entrega, a sua coragem se rende aos detalhes mais profundos. Você adora quando seguro firme o teu pescoço na iminência de sentir o prazer, e se desmancha por inteiro quando beijo os teus pés e chupo o seu dedo logo depois de chegarmos lá juntos. É a prova de que com você não existem meios-termos." },
+            { act: "Ato II: Os Detalhes e os Segredos", num: 15, title: "O Eco de Ser 'Mãe'", text: "Você ama ser elogiada por dar conta de tudo e por ser essa mulher multitarefa que resolve a vida. Mas a sua couraça desmorona por dentro quando você ouve um simples e genuíno 'obrigado, mãe...'. Nesse exato momento, o seu coração transborda de uma emoção tão forte que os teus olhos denunciam todo o amor que você guarda no peito." },
+
+            { act: "Ato III: As Tempestades Internas", num: 16, title: "O Ciclo Capilar e os Arrependimentos", text: "Inventar moda no cabelo, mudar o corte ou arriscar uma cor nova é a sua marca registrada quando a vontade de transformar o mundo por fora aperta. Mas a cena seguinte é sempre clássica: o arrependimento bate quase instantaneamente, acompanhado daquela risada marota e da pressa imediata de querer voltar atrás." },
+            { act: "Ato III: As Tempestades Internas", num: 17, title: "O Suor do Trabalho Invisível", text: "Você pode reclamar o quanto quiser, dizer para quem quiser ouvir que odeia a rotina e o seu trabalho. Mas a verdade é que só eu sei o preço real do suor, da resiliência e da força que você gastou para construir cada centímetro do lugar onde está hoje. É o seu esforço silencioso que ninguém vê, mas que eu admiro profundamente." },
+            { act: "Ato III: As Tempestades Internas", num: 18, title: "O Segredo das Plantas", text: "Você diz para todo mundo que não tem paciência para cuidar de nada nem de ninguém, que a vida já basta. Mas é só chegar perto das suas plantas que a couraça cai: você passa água, ajusta as folhas e gasta horas conversando com elas com um carinho que desmente qualquer pose de marra." },
+            { act: "Ato III: As Tempestades Internas", num: 19, title: "O Antídoto da Mensagem Certa", text: "O seu espaço é sagrado e você abomina quem fica o dia todo a encher o saco com cobranças no chat. Ponto para quem respeita o teu tempo. Mas a regra muda inteiramente quando sou eu: aquelas mensagens de bom dia, lembrando do teu café ou desejando que o teu dia seja maravilhoso, são os únicos recados que você faz questão de curtir e guardar." },
+            { act: "Ato III: As Tempestades Internas", num: 20, title: "A Felicidade da Jujuba", text: "Quando o mundo está pesado e a rotina te suga as energias, basta eu aparecer de surpresa com a sua jujuba favorita — porque eu presto atenção nos mínimos detalhes do que você gosta — para a mulher de ferro desaparecer por completo, dando lugar a uma menina pura que transborda de felicidade como quem ganha o melhor doce do mundo." },
+            { act: "Ato III: As Tempestades Internas", num: 21, title: "A Coragem de Ir Até o Fim", text: "O medo de arriscar tenta te paralisar a toda a hora, sussurrando para você ficar na zona de segurança do sofrimento conhecido. Mas, bastam um pingo de coragem e o empurrãozinho certo, para você decidir ir até o fim, enfrentando qualquer monstro sem olhar para trás." },
+            { act: "Ato III: As Tempestades Internas", num: 22, title: "O Fantasma da Maternidade", text: "O sonho de ter uma filha reluz lá no fundo dos teus olhos, brilhando com toda a pureza. Mas o medo e o trauma de ter vivido um passado pesado e doloroso na maternidade dos meninos ainda deixam marcas silenciosas, travando o seu coração com receio de repetir a mesma história." },
+
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 23, title: "O Porto Seguro das Pernas", text: "Na hora de dormir, você faz questão de espalhar-se, de ter o seu espaço e de viver a liberdade que a noite oferece. Mas, mesmo sem perceber, no meio do sono a sua perna sempre procura a minha na cama. É o seu corpo a desarmar os portões e a garantir instintivamente onde é o seu verdadeiro lugar de segurança." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 24, title: "O 'Então Bora' Precisa de Mão Firme", text: "Você adora soltar um 'então bora' quando o assunto é viver uma aventura ou encarar o desconhecido. Só que, por dentro, se não houver uma mão firme segurando a sua para dar o primeiro passo, o medo tenta puxar-te de volta. Você quer ir para o mundo, mas precisa da certeza de que não está a caminhar sozinha." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 25, title: "O Rolê e a Estrada", text: "O seu espírito divide-se de forma deliciosa: a tua alma ama um rolê aleatório de última hora, sem destino certo, mas a sua mente organizada adora sentar para planear cada detalhe milimétrico de uma viagem dos sonhos. É o equilíbrio perfeito entre a liberdade e o destino." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 26, title: "O Meio-Termo dos Sonhos", text: "A gente já não tem a ingenuidade dos vinte anos para enlouquecer por qualquer bobagem passageira, mas também não envelheceu a ponto de deixar os nossos maiores sonhos morrerem na gaveta. Estamos bem ali, no ponto exato onde a maturidade encontra a vontade viva de conquistar o mundo." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 27, title: "Girassóis e Corações", text: "Você acha rosas bonitas, sim, porque fazem parte do manual tradicional do romance. Mas o seu sorriso derrete de verdade, os seus olhos brilham e o rosto ilumina-se inteiro quando você cruza com um girassol. É a flor que traz a luz, a energia e o calor do sol que combinam com a sua essência." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 28, title: "O Grito Abafado do Reconhecimento", text: "Você não vive à espera de tapinhas nas costas ou de validação alheia, fingindo que o julgamento dos outros é irrelevante. Mas, quando alguém olha nos teus olhos e reconhece genuinamente o seu esforço, por dentro você quer explodir de alegria por ver que a sua luta finalmente foi enxergada." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 29, title: "Os Recados dos Sonhos", text: "A sua mente não descansa nem quando você dorme. Os seus sonhos e pesadelos tornaram-se avisos, intuições profundas que a vida te manda para clarear os pensamentos. E mesmo nas noites em que a borrasca aperta por dentro, você sabe exatamente para onde correr para encontrar acolhimento e paz." },
+            { act: "Ato IV: A Calma Depois da Borrasca", num: 30, title: "Onde o Amor Não Pesa", text: "Entre todas as tempestades que você enfrentou, as armaduras que vestiu e os caminhos tortuosos que a vida te obrigou a trilhar, o desfecho é simples. O lugar onde você finalmente descansa a cabeça e solta o peso do mundo é aquele onde o amor não cobra, não sufoca e não machuca: é leve, é seguro, é inteiro. Es casa." }
+        ];
+
+        const spreads = [];
+
+        // 1. Capa
+        spreads.push({
+    left: `<div class="flex items-center justify-center h-full text-slate-400 text-xs italic">Capa Interna</div>`,
+    right: `
+        <div class="flex flex-col items-center justify-center h-full w-full relative overflow-hidden rounded-lg shadow-xl p-2 bg-[#d4b08c]" style="background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 20px;">
+            <div class="absolute top-3 z-30 bg-slate-900/80 backdrop-blur px-4 py-1.5 rounded-full border border-amber-600/40 text-center shadow">
+                <h2 class="title-font text-xs md:text-sm font-bold text-amber-200 tracking-wide">O Livro de Mitos e Verdades da Nady</h2>
+            </div>
+            <div class="w-full h-full relative flex items-center justify-center mt-6">
+
+                <!-- Foto 1 (Canto Superior Esquerdo) -->
+                <div class="absolute top-1 left-2 w-24 md:w-32 bg-white p-1.5 pb-4 shadow-lg transform -rotate-12 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
+                    <img src="foto1.jpg" class="w-full h-20 md:h-24 object-cover" alt="Foto 1">
+                    <p class="text-[8px] text-center font-serif text-slate-600 mt-1 italic">Essência</p>
+                </div>
+
+                <!-- Foto 2 (Canto Superior Direito) -->
+                <div class="absolute top-2 right-2 w-24 md:w-32 bg-white p-1.5 pb-4 shadow-lg transform rotate-12 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
+                    <img src="foto2.jpg" class="w-full h-20 md:h-24 object-cover" alt="Foto 2">
+                    <p class="text-[8px] text-center font-serif text-slate-600 mt-1 italic">Sorriso</p>
+                </div>
+
+                <!-- Foto 3 (Centro - Foco Principal Ligeiramente Maior) -->
+                <div class="absolute top-14 md:top-16 w-28 md:w-36 bg-white p-2 pb-5 shadow-2xl transform -rotate-2 transition hover:scale-105 z-30 rounded-sm border border-slate-200">
+                    <img src="foto3.jpg" class="w-full h-24 md:h-28 object-cover" alt="Foto 3">
+                    <p class="text-[9px] text-center font-serif text-amber-900 font-semibold mt-1">Meu Porto Seguro 🧡</p>
+                </div>
+
+                <!-- Foto 4 (Canto Inferior Esquerdo) -->
+                <div class="absolute bottom-4 left-4 w-24 md:w-32 bg-white p-1.5 pb-4 shadow-lg transform rotate-6 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
+                    <img src="foto4.jpg" class="w-full h-20 md:h-24 object-cover" alt="Foto 4">
+                    <p class="text-[8px] text-center font-serif text-slate-600 mt-1 italic">Leveza</p>
+                </div>
+
+                <!-- Foto 5 (Canto Inferior Direito) -->
+                <div class="absolute bottom-4 right-4 w-24 md:w-32 bg-white p-1.5 pb-4 shadow-lg transform -rotate-6 transition hover:scale-105 z-20 rounded-sm border border-slate-200">
+                    <img src="foto5.jpg" class="w-full h-20 md:h-24 object-cover" alt="Foto 5">
+                    <p class="text-[8px] text-center font-serif text-slate-600 mt-1 italic">Luz</p>
+                </div>
+
+            </div>
+            <div class="absolute bottom-2 z-30 text-center">
+                <span class="text-[10px] uppercase tracking-widest text-slate-900 bg-amber-100/90 px-3 py-0.5 rounded font-bold shadow">Edição Limitada & Única</span>
+            </div>
+        </div>
+    `,
+    title: "Capa"
+});
+
+        // 2. Dedicatória
+        spreads.push({
+            left: `
+                <div class="flex flex-col justify-center h-full text-center px-4">
+                    <h3 class="title-font text-xl font-semibold text-amber-900 mb-4">Nota do Autor</h3>
+                    <p class="text-sm md:text-base text-slate-700 italic leading-relaxed font-serif">
+                        "Existem pessoas que entram na nossa vida como um vendaval, e existem aquelas que nos lembram o que é a paz. Este livro é o reflexo exato de tudo o que você é quando não precisa usar nenhuma armadura."
+                    </p>
+                </div>
+            `,
+            right: `
+                <div class="flex flex-col justify-center h-full text-center px-6">
+                    <div class="text-amber-800 text-2xl mb-2">✨</div>
+                    <h3 class="title-font text-xl font-semibold text-amber-900 mb-4">Dedicatória</h3>
+                    <p class="text-base md:text-lg text-slate-800 font-serif leading-relaxed italic">
+                        Para a Nady, que é força e doçura na mesma medida. Que encontre nas páginas a seguir a clareza de quem você é e a certeza de que tem sempre um porto seguro esperando por você.
+                    </p>
+                    <div class="mt-8 text-sm text-amber-900 font-medium">— Seu porto seguro</div>
+                </div>
+            `,
+            title: "Dedicatória"
+        });
+
+        // 3. Sumário Parte 1
+        spreads.push({
+            left: `
+                <div class="flex flex-col h-full justify-start py-2">
+                    <h3 class="title-font text-lg font-bold text-amber-900 mb-4 border-b border-amber-900/20 pb-2">Sumário</h3>
+                    <div class="space-y-4 text-xs md:text-sm">
+                        <div>
+                            <h4 class="font-bold text-amber-950 uppercase tracking-wide text-xs mb-1">Ato I: A Fortaleza e as Armaduras</h4>
+                            <ul class="space-y-1 pl-2 text-slate-700 font-serif">
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(1)">Cap. 1: O Império do Próprio Jeito</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(2)">Cap. 2: A Casca de Panda</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(3)">Cap. 3: Os Olhos de Mel e Ouro</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(4)">Cap. 4: O Refúgio Oculto do Toque</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(5)">Cap. 5: Cuidar para Não Ser Cuidada</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(6)">Cap. 6: Do Drink Elegante ao Boteco Insalubre</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(7)">Cap. 7: A Dança Solitária do Piseiro</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `,
+            right: `
+                <div class="flex flex-col h-full justify-start py-2">
+                    <h3 class="title-font text-lg font-bold text-amber-900 mb-4 border-b border-amber-900/20 pb-2">Sumário (Continuação)</h3>
+                    <div class="space-y-3 text-xs md:text-sm">
+                        <div>
+                            <h4 class="font-bold text-amber-950 uppercase tracking-wide text-xs mb-1">Ato II: Os Detalhes e os Segredos</h4>
+                            <ul class="space-y-1 pl-2 text-slate-700 font-serif">
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(8)">Cap. 8: A Arte de Não Pedir</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(9)">Cap. 9: O Mapa Silencioso do Desejo</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(10)">Cap. 10: O Peso dos Irrelevantes</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(11)">Cap. 11: A Sóbria Realidade do Prazer</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(12)">Cap. 12: A Trilha Sonora da Própria História</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(13)">Cap. 13: O Banquete da Alma</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(14)">Cap. 14: A Intensidade do Pescoço e dos Pés</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(15)">Cap. 15: O Eco de Ser "Mãe"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `,
+            title: "Sumário (Parte I)"
+        });
+
+        // 4. Sumário Parte 2
+        spreads.push({
+            left: `
+                <div class="flex flex-col h-full justify-start py-2">
+                    <h3 class="title-font text-lg font-bold text-amber-900 mb-4 border-b border-amber-900/20 pb-2">Sumário (Continuação)</h3>
+                    <div class="space-y-4 text-xs md:text-sm">
+                        <div>
+                            <h4 class="font-bold text-amber-950 uppercase tracking-wide text-xs mb-1">Ato III: As Tempestades Internas</h4>
+                            <ul class="space-y-1 pl-2 text-slate-700 font-serif">
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(16)">Cap. 16: O Ciclo Capilar e os Arrependimentos</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(17)">Cap. 17: O Suor do Trabalho Invisível</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(18)">Cap. 18: O Segredo das Plantas</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(19)">Cap. 19: O Antídoto da Mensagem Certa</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(20)">Cap. 20: A Felicidade da Jujuba</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(21)">Cap. 21: A Coragem de Ir Até o Fim</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(22)">Cap. 22: O Fantasma da Maternidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `,
+            right: `
+                <div class="flex flex-col h-full justify-start py-2">
+                    <h3 class="title-font text-lg font-bold text-amber-900 mb-4 border-b border-amber-900/20 pb-2">Sumário (Conclusão)</h3>
+                    <div class="space-y-4 text-xs md:text-sm">
+                        <div>
+                            <h4 class="font-bold text-amber-950 uppercase tracking-wide text-xs mb-1">Ato IV: A Calma Depois da Borrasca</h4>
+                            <ul class="space-y-1 pl-2 text-slate-700 font-serif">
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(23)">Cap. 23: O Porto Seguro das Pernas</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(24)">Cap. 24: O "Então Bora" Precisa de Mão Firme</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(25)">Cap. 25: O Rolê e a Estrada</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(26)">Cap. 26: O Meio-Termo dos Sonhos</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(27)">Cap. 27: Girassóis e Corações</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(28)">Cap. 28: O Grito Abafado do Reconhecimento</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(29)">Cap. 29: Os Recados dos Sonhos</li>
+                                <li class="cursor-pointer hover:text-amber-800" onclick="goToChapter(30)">Cap. 30: Onde o Amor Não Pesa</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `,
+            title: "Sumário (Parte II)"
+        });
+
+        // Adicionar Capítulos dinamicamente em pares (Esquerda e Direita)
+        const chapterSpreadsStart = spreads.length;
+        for (let i = 0; i < chapterList.length; i += 2) {
+            let leftChap = chapterList[i];
+            let rightChap = chapterList[i+1];
+
+            let leftHtml = `
+                <div class="flex flex-col h-full justify-between py-1">
+                    <div>
+                        <div class="text-[10px] tracking-widest text-amber-800 uppercase font-serif mb-1">${leftChap.act}</div>
+                        <h3 class="title-font text-base md:text-lg font-bold text-amber-950 mb-2 border-b border-amber-900/20 pb-1">Capítulo ${leftChap.num}: ${leftChap.title}</h3>
+                        <p class="text-xs md:text-sm text-slate-800 font-serif leading-relaxed text-justify">${leftChap.text}</p>
+                    </div>
+                    <div class="text-center text-[10px] text-amber-900/60 pt-2 font-serif">- ${leftChap.num} -</div>
+                </div>
+            `;
+
+            let rightHtml = "";
+            if (rightChap) {
+                rightHtml = `
+                    <div class="flex flex-col h-full justify-between py-1">
+                        <div>
+                            <div class="text-[10px] tracking-widest text-amber-800 uppercase font-serif mb-1">${rightChap.act}</div>
+                            <h3 class="title-font text-base md:text-lg font-bold text-amber-950 mb-2 border-b border-amber-900/20 pb-1">Capítulo ${rightChap.num}: ${rightChap.title}</h3>
+                            <p class="text-xs md:text-sm text-slate-800 font-serif leading-relaxed text-justify">${rightChap.text}</p>
+                        </div>
+                        <div class="text-center text-[10px] text-amber-900/60 pt-2 font-serif">- ${rightChap.num} -</div>
+                    </div>
+                `;
+            } else {
+                rightHtml = `<div class="flex items-center justify-center h-full text-amber-900/30 text-xs italic font-serif">Continua...</div>`;
+            }
+
+            spreads.push({
+                left: leftHtml,
+                right: rightHtml,
+                title: `Capítulos ${leftChap.num}${rightChap ? ' e ' + rightChap.num : ''}`
+            });
+        }
+
+        // Contracapa final
+        spreads.push({
+            left: `
+                <div class="flex flex-col justify-center h-full text-center px-6">
+                    <h3 class="title-font text-xl font-semibold text-amber-900 mb-3">Fim do Livro</h3>
+                    <p class="text-sm text-slate-700 italic font-serif leading-relaxed">
+                        "Que esta leitura te lembre sempre de quem você é quando está em paz."
+                    </p>
+                </div>
+            `,
+            right: `
+                <div class="flex flex-col items-center justify-center h-full text-center p-4 bg-cover bg-center rounded-lg shadow-xl relative overflow-hidden" style="background-image: url('fotonossa.jpg');">
+                    <div class="absolute inset-0 bg-black/50"></div>
+                    <div class="relative z-10 p-4 text-slate-100">
+                        <div class="text-amber-400 text-3xl mb-2">❦</div>
+                        <h3 class="title-font text-2xl font-bold text-amber-100 mb-2">Até a próxima página</h3>
+                        <p class="text-xs text-slate-200 font-serif">A nossa história continua sendo escrita todos os dias, com leveza e amor.</p>
+                    </div>
+                </div>
+            `,
+            title: "Contracapa"
+        });
+
+        let currentSpread = 0;
+
+        function renderSpread(direction = 'next') {
+            const leftPage = document.getElementById('left-page');
+            const rightPage = document.getElementById('right-page');
+            const indicator = document.getElementById('page-indicator');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            const current = spreads[currentSpread];
+
+            // Aplicar efeito 3D de virada de página na página direita
+            rightPage.classList.add('turning');
+
+            setTimeout(() => {
+                leftPage.innerHTML = current.left;
+                rightPage.innerHTML = current.right;
+
+                indicator.innerText = `${current.title} (${currentSpread + 1}/${spreads.length})`;
+                prevBtn.disabled = currentSpread === 0;
+                nextBtn.disabled = currentSpread === spreads.length - 1;
+
+                // Remover classe de rotação para resetar a animação
+                setTimeout(() => {
+                    rightPage.classList.remove('turning');
+                }, 50);
+            }, 300);
+        }
+
+        function nextSpread() {
+            if (currentSpread < spreads.length - 1) {
+                currentSpread++;
+                renderSpread('next');
+            }
+        }
+
+        function prevSpread() {
+            if (currentSpread > 0) {
+                currentSpread--;
+                renderSpread('prev');
+            }
+        }
+
+        function goToPage(index) {
+            if (index >= 0 && index < spreads.length) {
+                currentSpread = index;
+                renderSpread('jump');
+            }
+        }
+
+        function goToChapter(chapNum) {
+            let targetSpreadIndex = chapterSpreadsStart + Math.floor((chapNum - 1) / 2);
+            if (targetSpreadIndex < spreads.length) {
+                currentSpread = targetSpreadIndex;
+                renderSpread('jump');
+            }
+        }
+
+        window.onload = function() {
+            const leftPage = document.getElementById('left-page');
+            const rightPage = document.getElementById('right-page');
+            leftPage.innerHTML = spreads[0].left;
+            rightPage.innerHTML = spreads[0].right;
+            document.getElementById('page-indicator').innerText = `${spreads[0].title} (1/${spreads.length})`;
+        };
+    </script>
+</body>
+</html>
